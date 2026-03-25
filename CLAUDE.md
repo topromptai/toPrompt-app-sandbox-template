@@ -219,22 +219,109 @@ useEffect(() => {
 ### Adding a Package
 
 ```bash
-npx expo install expo-camera          # Expo/RN packages
-npm install lodash                     # Regular packages
+npx expo install expo-camera          # Expo/RN packages (SDK-compatible version)
+pnpm add lodash                        # Regular packages
+pnpm add -D @types/lodash             # Dev dependencies
 ```
 
 If it needs a provider, add to root `_layout.tsx` provider chain.
+
+### Using Date/Time Picker
+
+```tsx
+import DateTimePicker from '@react-native-community/datetimepicker';
+const [date, setDate] = useState(new Date());
+<DateTimePicker mode="date" value={date} onChange={(_, d) => d && setDate(d)} />
+```
+
+### Using Dropdown Picker
+
+```tsx
+import { Picker } from '@react-native-picker/picker';
+<Picker selectedValue={value} onValueChange={setValue}>
+  <Picker.Item label="Option A" value="a" />
+  <Picker.Item label="Option B" value="b" />
+</Picker>
+```
+
+### Using Optimized Images
+
+```tsx
+import { Image } from 'expo-image';
+<Image source={{ uri: 'https://...' }} style={{ width: 200, height: 200 }} contentFit="cover" />
+```
+
+### Using Gradients
+
+```tsx
+import { LinearGradient } from 'expo-linear-gradient';
+<LinearGradient colors={[colors.primary, colors.primaryDark]} style={{ padding: 16, borderRadius: 12 }}>
+  <Text variant="h4" color="#fff">Gradient Card</Text>
+</LinearGradient>
+```
+
+### Using Animations (Reanimated)
+
+```tsx
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+const offset = useSharedValue(0);
+const animStyle = useAnimatedStyle(() => ({ transform: [{ translateX: withSpring(offset.value) }] }));
+<Animated.View style={animStyle}><Text>Slide me</Text></Animated.View>
+```
+
+### Using SVG
+
+```tsx
+import Svg, { Circle, Rect } from 'react-native-svg';
+<Svg width={100} height={100}><Circle cx={50} cy={50} r={40} fill={colors.primary} /></Svg>
+```
+
+---
+
+## All Pre-installed Packages
+
+### Wired into boilerplate code
+
+| Package | Configured In |
+|---------|---------------|
+| `expo-router@6` | `src/app/` routes |
+| `zustand@5` | `src/store/useAppStore.ts` |
+| `@tanstack/react-query@5` | `src/services/queryClient.ts` + root layout |
+| `axios` | `src/services/api.ts` |
+| `expo-secure-store` | `src/services/api.ts` (auth token) |
+| `expo-font` | `src/hooks/useAppFonts.ts` |
+| `expo-splash-screen` | `src/app/_layout.tsx` |
+| `expo-haptics` | `Button.tsx`, `HapticTab.tsx` |
+| `@react-native-async-storage` | `src/utils/storage.ts` |
+| `expo-status-bar` | `SafeScreen.tsx`, root layout |
+| `react-native-safe-area-context` | `SafeScreen.tsx` |
+| `expo-web-browser` | `ExternalLink.tsx` |
+
+### Ready to import (no setup needed)
+
+| Package | Import |
+|---------|--------|
+| `react-native-reanimated` | `import Animated from 'react-native-reanimated'` |
+| `react-native-gesture-handler` | `import { GestureDetector } from 'react-native-gesture-handler'` |
+| `react-native-svg` | `import Svg, { Circle } from 'react-native-svg'` |
+| `expo-image` | `import { Image } from 'expo-image'` |
+| `expo-linear-gradient` | `import { LinearGradient } from 'expo-linear-gradient'` |
+| `@react-native-community/datetimepicker` | `import DateTimePicker from '@react-native-community/datetimepicker'` |
+| `@react-native-picker/picker` | `import { Picker } from '@react-native-picker/picker'` |
+| `@expo/vector-icons` | `import { Ionicons } from '@expo/vector-icons'` |
+| `expo-constants` | `import Constants from 'expo-constants'` |
+| `expo-linking` | `import * as Linking from 'expo-linking'` |
 
 ---
 
 ## Build Commands
 
 ```bash
-npm start          # Dev server
-npm run ios        # iOS
-npm run android    # Android
-npm run web        # Web
-npm run lint       # ESLint
-npm run type-check # TypeScript
-npm run format     # Prettier
+pnpm start          # Dev server
+pnpm ios            # iOS
+pnpm android        # Android
+pnpm web            # Web
+pnpm lint           # ESLint
+pnpm type-check     # TypeScript
+pnpm format         # Prettier
 ```

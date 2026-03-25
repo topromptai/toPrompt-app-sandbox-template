@@ -93,8 +93,8 @@ yarn.lock
 package-lock.json
 yarn.lock
 
-# Lock files
-*.lock
+# Lock files (keep pnpm-lock.yaml, ignore others)
+!pnpm-lock.yaml
 
 # Ignore Xcode environment and project settings
 .xcode.env.local

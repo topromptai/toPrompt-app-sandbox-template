@@ -11,7 +11,7 @@ Production-ready Expo SDK 54 starter with centralized theming, pre-configured pa
 ```bash
 git clone <your-repo-url> my-app
 cd my-app
-npm install
+pnpm install
 npx expo start
 ```
 
@@ -338,29 +338,47 @@ useEffect(() => {
 npx expo install expo-camera
 
 # Regular packages:
-npm install lodash && npm install -D @types/lodash
+pnpm add lodash && pnpm add -D @types/lodash
 ```
 
 ---
 
-## Pre-configured Packages
+## All Included Packages
 
-| Package | Purpose | Configured In |
-|---------|---------|---------------|
-| `expo-router` | File-based navigation | `src/app/` |
-| `zustand` | State management + persist | `src/store/useAppStore.ts` |
-| `@tanstack/react-query` | Server state, caching | `src/services/queryClient.ts` + root layout |
-| `axios` | HTTP + auth interceptors | `src/services/api.ts` |
-| `expo-secure-store` | Secure token storage | `src/services/api.ts` |
-| `expo-font` | Custom font loading | `src/hooks/useAppFonts.ts` |
-| `expo-splash-screen` | Splash management | `src/app/_layout.tsx` |
-| `expo-haptics` | Haptic feedback | Button, HapticTab |
-| `react-native-reanimated` | Animations | Available |
-| `react-native-gesture-handler` | Gestures | Available |
-| `react-native-svg` | SVG rendering | Available |
-| `expo-image` | Optimized images | Available |
-| `expo-linear-gradient` | Gradients | Available |
-| `@react-native-async-storage` | Local storage | `src/utils/storage.ts` |
+### Pre-configured (wired into boilerplate code)
+
+| Package | Purpose | Configured In | Usage |
+|---------|---------|---------------|-------|
+| `expo-router` | File-based navigation | `src/app/` | Create files in `src/app/` — they become routes automatically |
+| `zustand` | State management | `src/store/useAppStore.ts` | `const { colorScheme } = useAppStore()` |
+| `@tanstack/react-query` | Data fetching + caching | `src/services/queryClient.ts` + root layout | `useQuery({ queryKey: ['x'], queryFn })` |
+| `axios` | HTTP client + auth | `src/services/api.ts` | `api.get('/endpoint')` — auto-attaches auth token |
+| `expo-secure-store` | Secure key storage | `src/services/api.ts` | `setAuthToken(token)` / `clearAuthToken()` |
+| `expo-font` | Custom font loading | `src/hooks/useAppFonts.ts` | Loaded automatically in root `_layout.tsx` |
+| `expo-splash-screen` | Splash screen | `src/app/_layout.tsx` | Auto-hides when fonts finish loading |
+| `expo-haptics` | Haptic feedback | `Button.tsx`, `HapticTab.tsx` | `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)` |
+| `@react-native-async-storage` | Local storage | `src/utils/storage.ts` | `zustandStorage` adapter for Zustand persist |
+| `expo-status-bar` | Status bar control | `SafeScreen.tsx`, root layout | Auto light/dark via `<StatusBar style="auto">` |
+| `expo-constants` | App constants | Available | `Constants.expoConfig?.extra?.apiUrl` |
+| `expo-linking` | Deep linking | Expo Router integration | `Linking.openURL('https://...')` |
+| `expo-web-browser` | In-app browser | `ExternalLink.tsx` | `openBrowserAsync(url)` |
+| `react-native-safe-area-context` | Safe areas | `SafeScreen.tsx` | `<SafeScreen edges={['top']}>` |
+| `react-native-screens` | Native screen containers | Expo Router dependency | Automatic — enables native stack performance |
+
+### Available (installed, ready to import)
+
+| Package | Purpose | Usage |
+|---------|---------|-------|
+| `react-native-reanimated` | Smooth animations | `useSharedValue()`, `useAnimatedStyle()`, `withSpring()` |
+| `react-native-gesture-handler` | Touch gestures | `<GestureDetector>`, `Gesture.Pan()`, swipe/pinch/rotate |
+| `react-native-svg` | SVG rendering | `<Svg><Circle r={50} fill="red" /></Svg>` |
+| `expo-image` | Optimized images | `<Image source={{ uri }} contentFit="cover" />` (replaces RN Image) |
+| `expo-linear-gradient` | Gradient backgrounds | `<LinearGradient colors={['#000','#fff']} />` |
+| `expo-symbols` | SF Symbols (iOS) | Used by `IconSymbol.ios.tsx` |
+| `@react-native-community/datetimepicker` | Date/time picker | `<DateTimePicker mode="date" value={date} onChange={fn} />` |
+| `@react-native-picker/picker` | Dropdown select | `<Picker selectedValue={v}><Picker.Item label="A" value="a" /></Picker>` |
+| `@expo/vector-icons` | Icon library | `<Ionicons name="home" size={24} />` |
+| `react-native-worklets` | Reanimated dependency | Internal — used by reanimated worklets |
 
 ---
 
@@ -379,14 +397,14 @@ Variables prefixed with `EXPO_PUBLIC_` are accessible via `process.env.EXPO_PUBL
 
 | Command | Description |
 |---------|-------------|
-| `npm start` | Expo dev server |
-| `npm run ios` | iOS |
-| `npm run android` | Android |
-| `npm run web` | Web |
-| `npm run lint` | ESLint |
-| `npm run lint:fix` | Auto-fix lint |
-| `npm run format` | Prettier |
-| `npm run type-check` | TypeScript check |
+| `pnpm start` | Expo dev server |
+| `pnpm ios` | iOS |
+| `pnpm android` | Android |
+| `pnpm web` | Web |
+| `pnpm lint` | ESLint |
+| `pnpm lint:fix` | Auto-fix lint |
+| `pnpm format` | Prettier |
+| `pnpm type-check` | TypeScript check |
 
 ---
 
@@ -394,6 +412,7 @@ Variables prefixed with `EXPO_PUBLIC_` are accessible via `process.env.EXPO_PUBL
 
 | Decision | Rationale |
 |----------|-----------|
+| pnpm (not npm) | Faster installs, disk-efficient, strict dependency resolution |
 | AsyncStorage (not MMKV) | Works in Expo Go without dev client. Swap to MMKV in `storage.ts` when needed |
 | Plain StyleSheet | Zero config, no build plugins, universally understood |
 | Zustand (not Redux) | Less boilerplate, built-in persist, simpler API |
