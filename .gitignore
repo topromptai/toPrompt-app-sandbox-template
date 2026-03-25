@@ -1,0 +1,132 @@
+# OSX
+.DS_Store
+
+# Env files
+.env
+.env.*
+*.env
+
+# Xcode
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+temp_post.json
+**/.xcode.env.local
+.xcode.env.local
+ios/.xcode.env.local
+unity/
+
+# Ignore Android builds
+android/app/release/*.apk
+android/app/release/*.aab
+android/app/build/
+*.apk
+*.aab
+
+# Android/IntelliJ
+*release
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+*.kotlin_module
+!*.keystore
+!debug.keystore
+*.aab
+*.apk
+
+# node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+
+# Bundle artifact
+*.jsbundle
+
+# Ruby / CocoaPods
+**/Pods/
+/ios/Pods/
+/vendor/bundle/
+/ios/Podfile.lock
+/ios/Podfile-lock.json
+/RNTester/Gemfile.lock
+/ios/.xcode.env.local
+
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
+Podfile.lock
+
+# testing
+/coverage
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+yarn.lock
+
+# package lock
+package-lock.json
+yarn.lock
+
+# Lock files
+*.lock
+
+# Ignore Xcode environment and project settings
+.xcode.env.local
+ios/project.pbxproj
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native (generated)
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# debug
+npm-debug.*
+yarn-debug.*
+
+# TypeScript
+*.tsbuildinfo
+
+# Reset script output
+app-example
+src-example
+
+# Generated native folders
+/ios
+/android
