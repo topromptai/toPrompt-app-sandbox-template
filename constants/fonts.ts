@@ -2,7 +2,7 @@
  * Centralized font configuration for the entire app.
  *
  * HOW TO CUSTOMIZE:
- * 1. Replace .ttf files in src/assets/fonts/
+ * 1. Replace .ttf files in assets/fonts/
  * 2. Update the fontAssets map below to match your new file names
  * 3. Update FontFamily values if your font has different naming
  * 4. All components using typography presets will automatically reflect changes
