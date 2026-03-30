@@ -2,10 +2,10 @@ const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-// Exclude .pnpm hoisted store from file watching — pnpm creates temp files
-// (e.g. typescript_tmp_263_1) during install that crash Metro's file watcher
+// Only block pnpm temp files that crash Metro's file watcher during install.
+// Do NOT block the entire .pnpm/ directory — pnpm stores real packages there.
 config.resolver.blockList = [
-  /node_modules\/\.pnpm\/.*/,
+  /node_modules\/\.pnpm\/.*\/_tmp\/.*/,
 ];
 
 module.exports = config;

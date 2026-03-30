@@ -42,8 +42,18 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 - Create a new Axios instance — use `api` from `@/services/api`
 - Create a new QueryClient — use `queryClient` from `@/services/queryClient`
 - Use relative imports like `../../hooks` — use `@/hooks`
+- Delete or omit `.npmrc` when scaffolding a new project — it **MUST** be copied (contains `node-linker=hoisted` required for pnpm + Expo)
 
 ---
+
+## Critical Root Files
+
+| File | Purpose | What breaks without it |
+|------|---------|----------------------|
+| `.npmrc` | `node-linker=hoisted` — makes pnpm use flat node_modules | Metro can't resolve modules — app crashes with `Unable to resolve module` |
+| `metro.config.js` | Blocks only pnpm temp files — do NOT block entire `.pnpm/` directory | Module resolution fails |
+| `tsconfig.json` | `@/*` → `./src/*` path alias | All `@/` imports fail |
+| `app.json` | Expo config — name, slug, web output | Expo won't start |
 
 ## File Reference
 
