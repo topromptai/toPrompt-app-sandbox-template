@@ -1,11 +1,11 @@
 import React, { createContext, useMemo } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
 
-import { Colors, type ThemeColors } from '../constants/colors';
-import { FontFamily, FontWeight } from '../constants/fonts';
-import { BorderRadius, SCREEN_PADDING, Spacing } from '../constants/spacing';
-import { Typography } from '../constants/typography';
-import { useAppStore } from '../store/useAppStore';
+import { Colors, type ThemeColors } from '@/constants/colors';
+import { FontFamily, FontWeight } from '@/constants/fonts';
+import { BorderRadius, SCREEN_PADDING, Spacing } from '@/constants/spacing';
+import { Typography } from '@/constants/typography';
+import { useAppStore } from '@/store/useAppStore';
 
 export interface ThemeContextValue {
   colors: ThemeColors;

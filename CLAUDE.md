@@ -41,7 +41,7 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 - Wrap screens in `SafeAreaView` manually — use `<SafeScreen>`
 - Create a new Axios instance — use `api` from `@/services/api`
 - Create a new QueryClient — use `queryClient` from `@/services/queryClient`
-- Use relative imports like `../../hooks` — use `@/hooks`
+- Use relative imports like `../constants/colors` or `../../hooks` — **always** use `@/constants/colors` or `@/hooks` (the `@/` alias prevents case-sensitivity and path-depth bugs)
 - Delete or omit `.npmrc` when scaffolding a new project — it **MUST** be copied (contains `node-linker=hoisted` required for pnpm + Expo)
 
 ---

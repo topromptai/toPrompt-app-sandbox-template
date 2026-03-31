@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 
-import { fontAssets } from '../constants/fonts';
+import { fontAssets } from '@/constants/fonts';
 
 /**
  * Load custom fonts defined in constants/fonts.ts.

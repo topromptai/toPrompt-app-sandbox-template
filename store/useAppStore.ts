@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-import { zustandStorage } from '../utils/storage';
+import { zustandStorage } from '@/utils/storage';
 
 interface AppState {
   /** User's theme preference: 'light', 'dark', or 'system' (follows device) */

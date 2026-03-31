@@ -424,3 +424,4 @@ Variables prefixed with `EXPO_PUBLIC_` are accessible via `process.env.EXPO_PUBL
 | ErrorBoundary at root | Catches any JS crash, shows retry UI instead of white screen |
 | Event-based 401 handling | `onAuthExpired()` decouples API layer from navigation |
 | `@/*` → `./*` path alias | Maps to project root — all imports use `@/` prefix instead of relative paths |
+| Zero relative imports (`../`) | Every file uses `@/` absolute imports — prevents case-sensitivity bugs (e.g. `colors.ts` vs `Colors.ts`) and makes the codebase unambiguous for LLMs |
