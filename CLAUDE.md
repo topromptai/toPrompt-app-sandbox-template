@@ -42,6 +42,7 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 - Create a new Axios instance — use `api` from `@/services/api`
 - Create a new QueryClient — use `queryClient` from `@/services/queryClient`
 - Use relative imports like `../constants/colors` or `../../hooks` — **always** use `@/constants/colors` or `@/hooks` (the `@/` alias prevents case-sensitivity and path-depth bugs)
+- Rename or create boilerplate files with different casing — `constants/colors.ts` must stay lowercase, NOT `Colors.ts` (case-sensitive file systems like Linux/Docker will break)
 - Delete or omit `.npmrc` when scaffolding a new project — it **MUST** be copied (contains `node-linker=hoisted` required for pnpm + Expo)
 
 ---
@@ -58,6 +59,8 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 ---
 
 ## File Reference
+
+> **Filenames below are exact** — preserve lowercase casing (`colors.ts`, not `Colors.ts`).
 
 ### Constants (edit these to customize the app)
 
