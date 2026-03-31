@@ -2,7 +2,7 @@
 
 Production-ready Expo SDK 54 starter with centralized theming, pre-configured packages, and reusable components. TypeScript strict mode throughout.
 
-> **Core Principle:** Edit 4 files in `src/constants/` — the entire app updates automatically. No scattered hex codes, no missing font imports, no inconsistent spacing.
+> **Core Principle:** Edit 4 files in `constants/` — the entire app updates automatically. No scattered hex codes, no missing font imports, no inconsistent spacing.
 
 ---
 
@@ -12,8 +12,10 @@ Production-ready Expo SDK 54 starter with centralized theming, pre-configured pa
 git clone <your-repo-url> my-app
 cd my-app
 pnpm install
-npx expo start
+pnpm start
 ```
+
+> **Required:** `.npmrc` must be present — it contains `node-linker=hoisted` which is required for pnpm + Expo/Metro to work correctly. Never delete it.
 
 ## Tech Stack
 
@@ -34,10 +36,10 @@ npx expo start
 ```
 Developer edits:                    Consumed by:
 +----------------------------+      +-------------------------------------------+
-| src/constants/colors.ts    | ---> | ThemeContext -> useTheme() -> all screens  |
-| src/constants/fonts.ts     | ---> | useAppFonts() -> root _layout.tsx          |
-| src/constants/spacing.ts   | ---> | Spacer, Button, Card, SafeScreen, Input   |
-| src/constants/typography.ts| ---> | <Text variant="h1"> auto-styled           |
+| constants/colors.ts        | ---> | ThemeContext -> useTheme() -> all screens  |
+| constants/fonts.ts         | ---> | useAppFonts() -> root _layout.tsx          |
+| constants/spacing.ts       | ---> | Spacer, Button, Card, SafeScreen, Input   |
+| constants/typography.ts    | ---> | <Text variant="h1"> auto-styled           |
 +----------------------------+      +-------------------------------------------+
 
 Root _layout.tsx provider chain:
@@ -56,7 +58,7 @@ Root _layout.tsx provider chain:
 
 ## Customization Guide
 
-### Colors — `src/constants/colors.ts`
+### Colors — `constants/colors.ts`
 
 ```typescript
 export const LightColors = {
@@ -71,9 +73,9 @@ export const LightColors = {
 
 Both `LightColors` and `DarkColors` share the same keys. Components auto-switch between them.
 
-### Fonts — `src/constants/fonts.ts` + `src/assets/fonts/`
+### Fonts — `constants/fonts.ts` + `assets/fonts/`
 
-1. Replace `.ttf` files in `src/assets/fonts/`
+1. Replace `.ttf` files in `assets/fonts/`
 2. Update `fonts.ts`:
 
 ```typescript
@@ -94,7 +96,7 @@ export const fontAssets = {
 
 All `<Text>` and `<Button>` components update automatically.
 
-### Spacing — `src/constants/spacing.ts`
+### Spacing — `constants/spacing.ts`
 
 ```typescript
 export const Spacing = {
@@ -103,7 +105,7 @@ export const Spacing = {
 } as const;
 ```
 
-### Typography — `src/constants/typography.ts`
+### Typography — `constants/typography.ts`
 
 Adjust font sizes, line heights, letter spacing. The `<Text variant="h1">` component reads directly from this file.
 
@@ -113,55 +115,56 @@ Adjust font sizes, line heights, letter spacing. The `<Text variant="h1">` compo
 
 ```
 expo-boilerplate/
+|-- .npmrc                           # node-linker=hoisted (CRITICAL for pnpm + Expo)
 |-- app.json                         # Expo config (splash, icons, plugins, scheme)
-|-- tsconfig.json                    # TypeScript strict, @/* -> ./src/*
+|-- metro.config.js                  # Metro bundler — safe pnpm blockList
+|-- tsconfig.json                    # TypeScript strict, @/* -> ./*
 |-- package.json                     # Dependencies + scripts
 |
-|-- src/
-|   |-- app/                         # SCREENS (Expo Router file-based)
-|   |   |-- _layout.tsx              # Root: ErrorBoundary -> QueryClient -> Theme -> Stack
-|   |   |-- +not-found.tsx           # 404 screen
-|   |   |-- modal.tsx                # Example modal
-|   |   |-- (tabs)/
-|   |       |-- _layout.tsx          # Bottom tabs (Home + Settings)
-|   |       |-- index.tsx            # Home — component showcase
-|   |       |-- settings.tsx         # Settings — theme toggle demo
-|   |
-|   |-- assets/
-|   |   |-- fonts/                   # TTF files (Inter Regular/Medium/SemiBold/Bold)
-|   |   |-- images/                  # App icons, splash screen
-|   |
-|   |-- constants/                   # THE 4 FILES TO EDIT
-|   |   |-- colors.ts                # Light/dark color palette
-|   |   |-- fonts.ts                 # Font family + asset map
-|   |   |-- spacing.ts              # Spacing scale + border radius
-|   |   |-- typography.ts           # Text style presets
-|   |   |-- index.ts                # Barrel export
-|   |
-|   |-- theme/                       # Centralized theme system
-|   |   |-- ThemeContext.tsx          # Provider: resolves system + user theme
-|   |   |-- index.ts                 # Re-exports tokens
-|   |
-|   |-- components/
-|   |   |-- common/                  # THEMED COMPONENTS (use these, not raw RN)
-|   |   |   |-- Text.tsx             # <Text variant="h1">
-|   |   |   |-- Button.tsx           # <Button variant="primary"> with haptics
-|   |   |   |-- Input.tsx            # <Input label="Email" error="Required">
-|   |   |   |-- Card.tsx             # <Card> with shadow
-|   |   |   |-- SafeScreen.tsx       # SafeArea + StatusBar wrapper
-|   |   |   |-- KeyboardSafeView.tsx # Keyboard handling + tap to dismiss
-|   |   |   |-- Spacer.tsx           # <Spacer size="md">
-|   |   |   |-- LoadingSpinner.tsx   # Themed ActivityIndicator
-|   |   |   |-- ErrorBoundary.tsx    # Catches JS errors
-|   |   |   |-- index.ts            # Barrel export
-|   |   |-- layout/                  # Container, Row, Divider
-|   |   |-- ui/                      # IconSymbol, HapticTab, Collapsible, ExternalLink
-|   |
-|   |-- hooks/                       # useTheme, useAppFonts, useColorScheme
-|   |-- services/                    # api.ts (Axios), queryClient.ts (React Query)
-|   |-- store/                       # useAppStore.ts (Zustand, persisted)
-|   |-- types/                       # api.ts, navigation.ts
-|   |-- utils/                       # storage.ts, responsive.ts, platform.ts
+|-- app/                             # SCREENS (Expo Router file-based)
+|   |-- _layout.tsx                  # Root: ErrorBoundary -> QueryClient -> Theme -> Stack
+|   |-- +not-found.tsx               # 404 screen
+|   |-- modal.tsx                    # Example modal
+|   |-- (tabs)/
+|       |-- _layout.tsx              # Bottom tabs (Home + Settings)
+|       |-- index.tsx                # Home — component showcase
+|       |-- settings.tsx             # Settings — theme toggle demo
+|
+|-- assets/
+|   |-- fonts/                       # TTF files (Inter Regular/Medium/SemiBold/Bold)
+|   |-- images/                      # App icons, splash screen
+|
+|-- constants/                       # THE 4 FILES TO EDIT
+|   |-- colors.ts                    # Light/dark color palette
+|   |-- fonts.ts                     # Font family + asset map
+|   |-- spacing.ts                   # Spacing scale + border radius
+|   |-- typography.ts                # Text style presets
+|   |-- index.ts                     # Barrel export
+|
+|-- theme/                           # Centralized theme system
+|   |-- ThemeContext.tsx             # Provider: resolves system + user theme
+|   |-- index.ts                     # Re-exports tokens
+|
+|-- components/
+|   |-- common/                      # THEMED COMPONENTS (use these, not raw RN)
+|   |   |-- Text.tsx                 # <Text variant="h1">
+|   |   |-- Button.tsx               # <Button variant="primary"> with haptics
+|   |   |-- Input.tsx                # <Input label="Email" error="Required">
+|   |   |-- Card.tsx                 # <Card> with shadow
+|   |   |-- SafeScreen.tsx           # SafeArea + StatusBar wrapper
+|   |   |-- KeyboardSafeView.tsx     # Keyboard handling + tap to dismiss
+|   |   |-- Spacer.tsx               # <Spacer size="md">
+|   |   |-- LoadingSpinner.tsx       # Themed ActivityIndicator
+|   |   |-- ErrorBoundary.tsx        # Catches JS errors
+|   |   |-- index.ts                 # Barrel export
+|   |-- layout/                      # Container, Row, Divider
+|   |-- ui/                          # IconSymbol, HapticTab, Collapsible, ExternalLink
+|
+|-- hooks/                           # useTheme, useAppFonts, useColorScheme
+|-- services/                        # api.ts (Axios), queryClient.ts (React Query)
+|-- store/                           # useAppStore.ts (Zustand, persisted)
+|-- types/                           # api.ts, navigation.ts
+|-- utils/                           # storage.ts, responsive.ts, platform.ts
 ```
 
 ---
@@ -233,7 +236,7 @@ import { KeyboardSafeView } from '@/components/common';
 
 ### Add a New Screen
 
-Create `src/app/profile.tsx`:
+Create `app/profile.tsx`:
 
 ```tsx
 import { SafeScreen, Text, Spacer } from '@/components/common';
@@ -252,8 +255,8 @@ export default function ProfileScreen() {
 
 ### Add a New Tab
 
-1. Create `src/app/(tabs)/explore.tsx`
-2. Add to `src/app/(tabs)/_layout.tsx`:
+1. Create `app/(tabs)/explore.tsx`
+2. Add to `app/(tabs)/_layout.tsx`:
 
 ```tsx
 <Tabs.Screen
@@ -268,8 +271,8 @@ export default function ProfileScreen() {
 ### Add an API Service
 
 ```tsx
-// src/services/userService.ts
-import { api } from './api';
+// services/userService.ts
+import { api } from '@/services/api';
 import type { ApiResponse } from '@/types/api';
 
 interface User { id: string; name: string; email: string; }
@@ -295,7 +298,7 @@ const { data, isLoading } = useQuery({
 ### Add a New Zustand Store
 
 ```tsx
-// src/store/useAuthStore.ts
+// store/useAuthStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from '@/utils/storage';
@@ -349,20 +352,20 @@ pnpm add lodash && pnpm add -D @types/lodash
 
 | Package | Purpose | Configured In | Usage |
 |---------|---------|---------------|-------|
-| `expo-router` | File-based navigation | `src/app/` | Create files in `src/app/` — they become routes automatically |
-| `zustand` | State management | `src/store/useAppStore.ts` | `const { colorScheme } = useAppStore()` |
-| `@tanstack/react-query` | Data fetching + caching | `src/services/queryClient.ts` + root layout | `useQuery({ queryKey: ['x'], queryFn })` |
-| `axios` | HTTP client + auth | `src/services/api.ts` | `api.get('/endpoint')` — auto-attaches auth token |
-| `expo-secure-store` | Secure key storage | `src/services/api.ts` | `setAuthToken(token)` / `clearAuthToken()` |
-| `expo-font` | Custom font loading | `src/hooks/useAppFonts.ts` | Loaded automatically in root `_layout.tsx` |
-| `expo-splash-screen` | Splash screen | `src/app/_layout.tsx` | Auto-hides when fonts finish loading |
-| `expo-haptics` | Haptic feedback | `Button.tsx`, `HapticTab.tsx` | `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)` |
-| `@react-native-async-storage` | Local storage | `src/utils/storage.ts` | `zustandStorage` adapter for Zustand persist |
-| `expo-status-bar` | Status bar control | `SafeScreen.tsx`, root layout | Auto light/dark via `<StatusBar style="auto">` |
+| `expo-router` | File-based navigation | `app/` | Create files in `app/` — they become routes automatically |
+| `zustand` | State management | `store/useAppStore.ts` | `const { colorScheme } = useAppStore()` |
+| `@tanstack/react-query` | Data fetching + caching | `services/queryClient.ts` + root layout | `useQuery({ queryKey: ['x'], queryFn })` |
+| `axios` | HTTP client + auth | `services/api.ts` | `api.get('/endpoint')` — auto-attaches auth token |
+| `expo-secure-store` | Secure key storage | `services/api.ts` | `setAuthToken(token)` / `clearAuthToken()` |
+| `expo-font` | Custom font loading | `hooks/useAppFonts.ts` | Loaded automatically in root `_layout.tsx` |
+| `expo-splash-screen` | Splash screen | `app/_layout.tsx` | Auto-hides when fonts finish loading |
+| `expo-haptics` | Haptic feedback | `components/common/Button.tsx`, `components/ui/HapticTab.tsx` | `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)` |
+| `@react-native-async-storage` | Local storage | `utils/storage.ts` | `zustandStorage` adapter for Zustand persist |
+| `expo-status-bar` | Status bar control | `components/common/SafeScreen.tsx`, root layout | Auto light/dark via `<StatusBar style="auto">` |
 | `expo-constants` | App constants | Available | `Constants.expoConfig?.extra?.apiUrl` |
 | `expo-linking` | Deep linking | Expo Router integration | `Linking.openURL('https://...')` |
-| `expo-web-browser` | In-app browser | `ExternalLink.tsx` | `openBrowserAsync(url)` |
-| `react-native-safe-area-context` | Safe areas | `SafeScreen.tsx` | `<SafeScreen edges={['top']}>` |
+| `expo-web-browser` | In-app browser | `components/ui/ExternalLink.tsx` | `openBrowserAsync(url)` |
+| `react-native-safe-area-context` | Safe areas | `components/common/SafeScreen.tsx` | `<SafeScreen edges={['top']}>` |
 | `react-native-screens` | Native screen containers | Expo Router dependency | Automatic — enables native stack performance |
 
 ### Available (installed, ready to import)
@@ -374,7 +377,7 @@ pnpm add lodash && pnpm add -D @types/lodash
 | `react-native-svg` | SVG rendering | `<Svg><Circle r={50} fill="red" /></Svg>` |
 | `expo-image` | Optimized images | `<Image source={{ uri }} contentFit="cover" />` (replaces RN Image) |
 | `expo-linear-gradient` | Gradient backgrounds | `<LinearGradient colors={['#000','#fff']} />` |
-| `expo-symbols` | SF Symbols (iOS) | Used by `IconSymbol.ios.tsx` |
+| `expo-symbols` | SF Symbols (iOS) | Used by `components/ui/IconSymbol.ios.tsx` |
 | `@react-native-community/datetimepicker` | Date/time picker | `<DateTimePicker mode="date" value={date} onChange={fn} />` |
 | `@react-native-picker/picker` | Dropdown select | `<Picker selectedValue={v}><Picker.Item label="A" value="a" /></Picker>` |
 | `@expo/vector-icons` | Icon library | `<Ionicons name="home" size={24} />` |
@@ -398,12 +401,12 @@ Variables prefixed with `EXPO_PUBLIC_` are accessible via `process.env.EXPO_PUBL
 | Command | Description |
 |---------|-------------|
 | `pnpm start` | Expo dev server |
-| `pnpm ios` | iOS |
-| `pnpm android` | Android |
-| `pnpm web` | Web |
+| `pnpm ios` | iOS simulator |
+| `pnpm android` | Android emulator |
+| `pnpm web` | Web browser |
 | `pnpm lint` | ESLint |
-| `pnpm lint:fix` | Auto-fix lint |
-| `pnpm format` | Prettier |
+| `pnpm lint:fix` | Auto-fix lint errors |
+| `pnpm format` | Prettier format |
 | `pnpm type-check` | TypeScript check |
 
 ---
@@ -413,9 +416,11 @@ Variables prefixed with `EXPO_PUBLIC_` are accessible via `process.env.EXPO_PUBL
 | Decision | Rationale |
 |----------|-----------|
 | pnpm (not npm) | Faster installs, disk-efficient, strict dependency resolution |
-| AsyncStorage (not MMKV) | Works in Expo Go without dev client. Swap to MMKV in `storage.ts` when needed |
+| `node-linker=hoisted` in `.npmrc` | pnpm's default strict symlink mode breaks Metro/Expo — hoisted makes node_modules flat like npm |
+| AsyncStorage (not MMKV) | Works in Expo Go without dev client. Swap to MMKV in `utils/storage.ts` when needed |
 | Plain StyleSheet | Zero config, no build plugins, universally understood |
 | Zustand (not Redux) | Less boilerplate, built-in persist, simpler API |
 | Expo Router (not React Navigation) | File-based routing, type-safe, Expo recommended |
 | ErrorBoundary at root | Catches any JS crash, shows retry UI instead of white screen |
 | Event-based 401 handling | `onAuthExpired()` decouples API layer from navigation |
+| `@/*` → `./*` path alias | Maps to project root — all imports use `@/` prefix instead of relative paths |

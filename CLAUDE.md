@@ -10,7 +10,7 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 - **Zustand 5** state, **TanStack Query 5** data fetching, **Axios** HTTP
 - **Styling:** Plain `StyleSheet` — NO NativeWind, NO styled-components
 - **New Architecture** + **React Compiler** enabled
-- **Path alias:** `@/*` maps to `./src/*`
+- **Path alias:** `@/*` maps to `./*` (project root)
 
 ---
 
@@ -51,9 +51,11 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 | File | Purpose | What breaks without it |
 |------|---------|----------------------|
 | `.npmrc` | `node-linker=hoisted` — makes pnpm use flat node_modules | Metro can't resolve modules — app crashes with `Unable to resolve module` |
-| `metro.config.js` | Blocks only pnpm temp files — do NOT block entire `.pnpm/` directory | Module resolution fails |
-| `tsconfig.json` | `@/*` → `./src/*` path alias | All `@/` imports fail |
-| `app.json` | Expo config — name, slug, web output | Expo won't start |
+| `metro.config.js` | Blocks only pnpm `_tmp` files — do NOT block entire `.pnpm/` directory | Module resolution fails |
+| `tsconfig.json` | `@/*` → `./*` path alias | All `@/` imports fail |
+| `app.json` | Expo config — name, slug, platforms, plugins | Expo won't start |
+
+---
 
 ## File Reference
 
@@ -61,27 +63,27 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 
 | File | Key Exports | Purpose |
 |------|-------------|---------|
-| `src/constants/colors.ts` | `LightColors`, `DarkColors`, `Colors`, `ThemeColors` | Full light/dark palette |
-| `src/constants/fonts.ts` | `FontFamily`, `fontAssets`, `FontWeight` | Font names + require map |
-| `src/constants/spacing.ts` | `Spacing`, `BorderRadius`, `SCREEN_PADDING` | Spacing scale + radii |
-| `src/constants/typography.ts` | `Typography`, `TypographyVariant` | 13 text style presets |
+| `constants/colors.ts` | `LightColors`, `DarkColors`, `Colors`, `ThemeColors` | Full light/dark palette |
+| `constants/fonts.ts` | `FontFamily`, `fontAssets`, `FontWeight` | Font names + require map |
+| `constants/spacing.ts` | `Spacing`, `BorderRadius`, `SCREEN_PADDING` | Spacing scale + radii |
+| `constants/typography.ts` | `Typography`, `TypographyVariant` | 13 text style presets |
 
 ### Theme
 
 | File | Purpose |
 |------|---------|
-| `src/theme/ThemeContext.tsx` | Provider wrapping entire app, resolves light/dark/system |
-| `src/theme/index.ts` | Re-exports all design tokens |
-| `src/hooks/useTheme.ts` | Returns `{ colors, fonts, spacing, typography, isDark, setColorScheme }` |
+| `theme/ThemeContext.tsx` | Provider wrapping entire app, resolves light/dark/system |
+| `theme/index.ts` | Re-exports all design tokens |
+| `hooks/useTheme.ts` | Returns `{ colors, fonts, spacing, typography, isDark, setColorScheme }` |
 
 ### State & Data
 
 | File | Purpose |
 |------|---------|
-| `src/store/useAppStore.ts` | Zustand: `colorScheme` + `isOnboarded`, persisted to AsyncStorage |
-| `src/utils/storage.ts` | AsyncStorage wrapper + Zustand `StateStorage` adapter |
-| `src/services/api.ts` | Axios: auth interceptors, 401 event emitter, token helpers |
-| `src/services/queryClient.ts` | React Query: 5min stale, 2 retries, no window refocus |
+| `store/useAppStore.ts` | Zustand: `colorScheme` + `isOnboarded`, persisted to AsyncStorage |
+| `utils/storage.ts` | AsyncStorage wrapper + Zustand `StateStorage` adapter |
+| `services/api.ts` | Axios: auth interceptors, 401 event emitter, token helpers |
+| `services/queryClient.ts` | React Query: 5min stale, 2 retries, no window refocus |
 
 ### Components
 
@@ -119,7 +121,7 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 ### Navigation
 
 ```
-src/app/
+app/
   _layout.tsx           Root Stack (ErrorBoundary -> QueryClient -> Theme)
   +not-found.tsx        404
   modal.tsx             Modal example
@@ -129,9 +131,9 @@ src/app/
     settings.tsx        Settings (theme toggle)
 ```
 
-Add screen: create `src/app/myscreen.tsx`.
-Add tab: create `src/app/(tabs)/mytab.tsx` + add `<Tabs.Screen>` in `_layout.tsx`.
-Add nested stack: create `src/app/(auth)/` with its own `_layout.tsx`.
+Add screen: create `app/myscreen.tsx`.
+Add tab: create `app/(tabs)/mytab.tsx` + add `<Tabs.Screen>` in `_layout.tsx`.
+Add nested stack: create `app/(auth)/` with its own `_layout.tsx`.
 
 ---
 
@@ -294,18 +296,18 @@ import Svg, { Circle, Rect } from 'react-native-svg';
 
 | Package | Configured In |
 |---------|---------------|
-| `expo-router@6` | `src/app/` routes |
-| `zustand@5` | `src/store/useAppStore.ts` |
-| `@tanstack/react-query@5` | `src/services/queryClient.ts` + root layout |
-| `axios` | `src/services/api.ts` |
-| `expo-secure-store` | `src/services/api.ts` (auth token) |
-| `expo-font` | `src/hooks/useAppFonts.ts` |
-| `expo-splash-screen` | `src/app/_layout.tsx` |
-| `expo-haptics` | `Button.tsx`, `HapticTab.tsx` |
-| `@react-native-async-storage` | `src/utils/storage.ts` |
-| `expo-status-bar` | `SafeScreen.tsx`, root layout |
-| `react-native-safe-area-context` | `SafeScreen.tsx` |
-| `expo-web-browser` | `ExternalLink.tsx` |
+| `expo-router@6` | `app/` routes |
+| `zustand@5` | `store/useAppStore.ts` |
+| `@tanstack/react-query@5` | `services/queryClient.ts` + root layout |
+| `axios` | `services/api.ts` |
+| `expo-secure-store` | `services/api.ts` (auth token) |
+| `expo-font` | `hooks/useAppFonts.ts` |
+| `expo-splash-screen` | `app/_layout.tsx` |
+| `expo-haptics` | `components/common/Button.tsx`, `components/ui/HapticTab.tsx` |
+| `@react-native-async-storage` | `utils/storage.ts` |
+| `expo-status-bar` | `components/common/SafeScreen.tsx`, root layout |
+| `react-native-safe-area-context` | `components/common/SafeScreen.tsx` |
+| `expo-web-browser` | `components/ui/ExternalLink.tsx` |
 
 ### Ready to import (no setup needed)
 
@@ -332,6 +334,7 @@ pnpm ios            # iOS
 pnpm android        # Android
 pnpm web            # Web
 pnpm lint           # ESLint
+pnpm lint:fix       # Auto-fix lint
 pnpm type-check     # TypeScript
 pnpm format         # Prettier
 ```
