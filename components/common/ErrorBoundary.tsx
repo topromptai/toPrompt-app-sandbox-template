@@ -1,7 +1,7 @@
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text as RNText, View } from 'react-native';
 
-import { LightColors } from '@/constants/colors';
+import { LightColors } from '@/constants/Colors';
 import { Spacing, BorderRadius } from '@/constants/spacing';
 
 interface ErrorBoundaryProps {

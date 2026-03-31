@@ -36,7 +36,7 @@ pnpm start
 ```
 Developer edits:                    Consumed by:
 +----------------------------+      +-------------------------------------------+
-| constants/colors.ts        | ---> | ThemeContext -> useTheme() -> all screens  |
+| constants/Colors.ts        | ---> | ThemeContext -> useTheme() -> all screens  |
 | constants/fonts.ts         | ---> | useAppFonts() -> root _layout.tsx          |
 | constants/spacing.ts       | ---> | Spacer, Button, Card, SafeScreen, Input   |
 | constants/typography.ts    | ---> | <Text variant="h1"> auto-styled           |
@@ -48,17 +48,17 @@ Root _layout.tsx provider chain:
 
 **How it flows:**
 
-1. `colors.ts` defines light/dark semantic color tokens
+1. `Colors.ts` defines light/dark semantic color tokens
 2. `ThemeContext.tsx` reads colors + system preference + user override from Zustand
 3. `useTheme()` gives every component the resolved theme
 4. Components (`Text`, `Button`, `Input`, `Card`, `SafeScreen`) use theme colors automatically
-5. Change `primary` in `colors.ts` → every button, link, accent updates instantly
+5. Change `primary` in `Colors.ts` → every button, link, accent updates instantly
 
 ---
 
 ## Customization Guide
 
-### Colors — `constants/colors.ts`
+### Colors — `constants/Colors.ts`
 
 ```typescript
 export const LightColors = {
@@ -135,7 +135,7 @@ expo-boilerplate/
 |   |-- images/                      # App icons, splash screen
 |
 |-- constants/                       # THE 4 FILES TO EDIT
-|   |-- colors.ts                    # Light/dark color palette
+|   |-- Colors.ts                    # Light/dark color palette
 |   |-- fonts.ts                     # Font family + asset map
 |   |-- spacing.ts                   # Spacing scale + border radius
 |   |-- typography.ts                # Text style presets
@@ -424,4 +424,4 @@ Variables prefixed with `EXPO_PUBLIC_` are accessible via `process.env.EXPO_PUBL
 | ErrorBoundary at root | Catches any JS crash, shows retry UI instead of white screen |
 | Event-based 401 handling | `onAuthExpired()` decouples API layer from navigation |
 | `@/*` → `./*` path alias | Maps to project root — all imports use `@/` prefix instead of relative paths |
-| Zero relative imports (`../`) | Every file uses `@/` absolute imports — prevents case-sensitivity bugs (e.g. `colors.ts` vs `Colors.ts`) and makes the codebase unambiguous for LLMs |
+| Zero relative imports (`../`) | Every file uses `@/` absolute imports — prevents case-sensitivity bugs and makes the codebase unambiguous for LLMs |

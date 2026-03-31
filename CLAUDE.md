@@ -41,8 +41,8 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 - Wrap screens in `SafeAreaView` manually — use `<SafeScreen>`
 - Create a new Axios instance — use `api` from `@/services/api`
 - Create a new QueryClient — use `queryClient` from `@/services/queryClient`
-- Use relative imports like `../constants/colors` or `../../hooks` — **always** use `@/constants/colors` or `@/hooks` (the `@/` alias prevents case-sensitivity and path-depth bugs)
-- Rename or create boilerplate files with different casing — `constants/colors.ts` must stay lowercase, NOT `Colors.ts` (case-sensitive file systems like Linux/Docker will break)
+- Use relative imports like `../constants/Colors` or `../../hooks` — **always** use `@/constants/Colors` or `@/hooks` (the `@/` alias prevents case-sensitivity and path-depth bugs)
+- Rename or create boilerplate files with different casing — `constants/Colors.ts` must stay PascalCase, NOT `colors.ts` (case-sensitive file systems like Linux/Docker will break if imports don't match filenames)
 - Delete or omit `.npmrc` when scaffolding a new project — it **MUST** be copied (contains `node-linker=hoisted` required for pnpm + Expo)
 
 ---
@@ -60,13 +60,13 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 
 ## File Reference
 
-> **Filenames below are exact** — preserve lowercase casing (`colors.ts`, not `Colors.ts`).
+> **Filenames below are exact** — preserve the exact casing shown (`Colors.ts`, not `colors.ts`).
 
 ### Constants (edit these to customize the app)
 
 | File | Key Exports | Purpose |
 |------|-------------|---------|
-| `constants/colors.ts` | `LightColors`, `DarkColors`, `Colors`, `ThemeColors` | Full light/dark palette |
+| `constants/Colors.ts` | `LightColors`, `DarkColors`, `Colors`, `ThemeColors` | Full light/dark palette |
 | `constants/fonts.ts` | `FontFamily`, `fontAssets`, `FontWeight` | Font names + require map |
 | `constants/spacing.ts` | `Spacing`, `BorderRadius`, `SCREEN_PADDING` | Spacing scale + radii |
 | `constants/typography.ts` | `Typography`, `TypographyVariant` | 13 text style presets |
