@@ -18,16 +18,35 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 
 ### DO use the boilerplate components
 
+**Primary imports — `@/components/ui`** (code generator uses these paths):
+
 | Need | Import from | Component |
 |------|-------------|-----------|
-| Any text | `@/components/common` | `<Text variant="h1">` |
-| Any button | `@/components/common` | `<Button variant="primary" onPress={fn}>` |
-| Text input | `@/components/common` | `<Input label="Email" error="Required">` |
-| Card/container | `@/components/common` | `<Card>` |
-| Screen wrapper | `@/components/common` | `<SafeScreen scroll>` |
+| Screen wrapper | `@/components/ui/Screen` | `<Screen scroll>` |
+| Any text | `@/components/ui/Typography` | `<Typography variant="h1">` |
+| Any button | `@/components/ui/Button` | `<Button variant="primary" onPress={fn}>` |
+| Text input | `@/components/ui/Input` | `<Input label="Email" error="Required">` |
+| Card/container | `@/components/ui/Card` | `<Card>` |
+| Status pill | `@/components/ui/Badge` | `<Badge label="Active" variant="success">` |
+| User image | `@/components/ui/Avatar` | `<Avatar uri={url} name="John" size={40}>` |
+| Menu/settings row | `@/components/ui/ListItem` | `<ListItem title="Profile" icon="person-outline" showChevron>` |
+| Empty/error state | `@/components/ui/EmptyState` | `<EmptyState title="No items" message="...">` |
+| Bottom sheet | `@/components/ui/Modal` | `<Modal visible={show} onClose={close} title="Pick">` |
+| Icons | `@/components/ui/Icon` | `<Icon name="home-outline" size={24}>` |
+| Loading UI | `@/components/ui/LoadingSpinner` | `<LoadingSpinner overlay>` |
+
+**Also available — `@/components/common`** (direct implementations):
+
+| Need | Import from | Component |
+|------|-------------|-----------|
 | Keyboard form | `@/components/common` | `<KeyboardSafeView scroll>` |
 | Spacing | `@/components/common` | `<Spacer size="md">` |
-| Loading UI | `@/components/common` | `<LoadingSpinner overlay>` |
+| Error boundary | `@/components/common` | `<ErrorBoundary>` |
+
+**Layout — `@/components/layout`**:
+
+| Need | Import from | Component |
+|------|-------------|-----------|
 | Horizontal row | `@/components/layout` | `<Row justify="space-between" gap="sm">` |
 | Divider line | `@/components/layout` | `<Divider>` |
 
@@ -90,18 +109,31 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 
 ### Components
 
-**Common (`@/components/common`):**
+**UI (`@/components/ui`) — primary import path for generated code:**
 
 | Component | Key Props |
 |-----------|-----------|
-| `Text` | `variant` (h1-h6, body1-2, caption, etc.), `color`, `align` |
+| `Screen` | `scroll`, `edges`, `noPadding` — SafeAreaView + StatusBar wrapper |
+| `Typography` | `variant` (h1-h6, body1-2, caption, etc.), `color`, `align` |
 | `Button` | `title`, `variant` (primary/secondary/outline/ghost), `size`, `loading`, `disabled`, `fullWidth` |
 | `Input` | `label`, `error`, `hint`, plus all TextInputProps |
 | `Card` | `noPadding` |
-| `SafeScreen` | `scroll`, `edges`, `noPadding` |
+| `Badge` | `label`, `variant` (default/success/warning/error/info/primary) |
+| `Avatar` | `uri`, `name`, `size` — image or initials fallback |
+| `ListItem` | `title`, `subtitle`, `icon`, `showChevron`, `onPress`, `right` |
+| `EmptyState` | `icon`, `title`, `message`, `actionLabel`, `onAction` |
+| `Modal` | `visible`, `onClose`, `title`, `children` — bottom sheet style |
+| `Icon` | `name` (Ionicons), `size`, `color` |
+| `LoadingSpinner` | `overlay`, `size` |
+
+**Common (`@/components/common`) — implementations + extras:**
+
+| Component | Key Props |
+|-----------|-----------|
+| `Text` | Same as Typography (aliased as Typography in ui/) |
+| `SafeScreen` | Same as Screen (aliased as Screen in ui/) |
 | `KeyboardSafeView` | `scroll`, `keyboardVerticalOffset` |
 | `Spacer` | `size` (SpacingKey), `horizontal` |
-| `LoadingSpinner` | `overlay`, `size` |
 | `ErrorBoundary` | `fallback` |
 
 **Layout (`@/components/layout`):**
@@ -112,7 +144,7 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 | `Row` | `justify`, `align`, `gap`, `wrap` |
 | `Divider` | `spacing`, `vertical` |
 
-**UI (`@/components/ui/*`):**
+**UI extras (`@/components/ui/*`):**
 
 | Component | Description |
 |-----------|-------------|
@@ -180,16 +212,17 @@ BorderRadius: sm=4 md=8 lg=12 xl=16 2xl=24 full=9999
 ### New Screen
 
 ```tsx
-import { SafeScreen, Text, Spacer } from '@/components/common';
+import { Screen, Typography } from '@/components/ui';
+import { Spacer } from '@/components/common';
 import { useTheme } from '@/hooks';
 
 export default function MyScreen() {
   const { colors } = useTheme();
   return (
-    <SafeScreen scroll>
+    <Screen scroll>
       <Spacer size="xl" />
-      <Text variant="h2">Title</Text>
-    </SafeScreen>
+      <Typography variant="h2">Title</Typography>
+    </Screen>
   );
 }
 ```

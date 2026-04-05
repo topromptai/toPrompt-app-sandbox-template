@@ -146,19 +146,35 @@ expo-boilerplate/
 |   |-- index.ts                     # Re-exports tokens
 |
 |-- components/
-|   |-- common/                      # THEMED COMPONENTS (use these, not raw RN)
+|   |-- common/                      # THEMED COMPONENTS (implementations)
 |   |   |-- Text.tsx                 # <Text variant="h1">
 |   |   |-- Button.tsx               # <Button variant="primary"> with haptics
 |   |   |-- Input.tsx                # <Input label="Email" error="Required">
 |   |   |-- Card.tsx                 # <Card> with shadow
 |   |   |-- SafeScreen.tsx           # SafeArea + StatusBar wrapper
+|   |   |-- Badge.tsx                # <Badge label="Active" variant="success">
+|   |   |-- Avatar.tsx               # <Avatar uri={url} name="John">
+|   |   |-- ListItem.tsx             # <ListItem title="Profile" icon="person-outline">
+|   |   |-- EmptyState.tsx           # <EmptyState title="No items">
+|   |   |-- Modal.tsx                # <Modal visible title="Pick">
 |   |   |-- KeyboardSafeView.tsx     # Keyboard handling + tap to dismiss
 |   |   |-- Spacer.tsx               # <Spacer size="md">
 |   |   |-- LoadingSpinner.tsx       # Themed ActivityIndicator
 |   |   |-- ErrorBoundary.tsx        # Catches JS errors
 |   |   |-- index.ts                 # Barrel export
+|   |-- ui/                          # CODE GENERATOR IMPORT PATH (re-exports from common/)
+|   |   |-- Screen.tsx               # Re-exports SafeScreen as Screen
+|   |   |-- Typography.tsx           # Re-exports Text as Typography
+|   |   |-- Icon.tsx                 # Ionicons-based icon component
+|   |   |-- Button/Card/Input/...    # Re-exports from common/
+|   |   |-- Badge/Avatar/ListItem/.. # Re-exports from common/
+|   |   |-- EmptyState/Modal/...     # Re-exports from common/
+|   |   |-- index.ts                 # Barrel export
+|   |   |-- IconSymbol.tsx           # SF Symbols (iOS) / Material Icons
+|   |   |-- HapticTab.tsx            # Tab button with haptic feedback
+|   |   |-- Collapsible.tsx          # Expand/collapse section
+|   |   |-- ExternalLink.tsx         # In-app browser link
 |   |-- layout/                      # Container, Row, Divider
-|   |-- ui/                          # IconSymbol, HapticTab, Collapsible, ExternalLink
 |
 |-- hooks/                           # useTheme, useAppFonts, useColorScheme
 |-- services/                        # api.ts (Axios), queryClient.ts (React Query)
@@ -171,12 +187,22 @@ expo-boilerplate/
 
 ## Pre-built Components
 
-### Text
+> **Import path:** Use `@/components/ui` for generated code compatibility. Use `@/components/common` for direct implementations.
+
+### Screen (wraps SafeAreaView + StatusBar)
 
 ```tsx
-import { Text } from '@/components/common';
-<Text variant="h1">Heading</Text>
-<Text variant="body1" color={colors.textSecondary}>Subtitle</Text>
+import { Screen } from '@/components/ui/Screen';
+<Screen scroll>{/* content */}</Screen>
+<Screen edges={['top']} noPadding>{/* full-width */}</Screen>
+```
+
+### Typography (themed text with variant presets)
+
+```tsx
+import { Typography } from '@/components/ui/Typography';
+<Typography variant="h1">Heading</Typography>
+<Typography variant="body1" color={colors.textSecondary}>Subtitle</Typography>
 ```
 
 Variants: `h1` `h2` `h3` `h4` `h5` `h6` `subtitle1` `subtitle2` `body1` `body2` `caption` `overline` `button` `label`
@@ -184,7 +210,7 @@ Variants: `h1` `h2` `h3` `h4` `h5` `h6` `subtitle1` `subtitle2` `body1` `body2` 
 ### Button
 
 ```tsx
-import { Button } from '@/components/common';
+import { Button } from '@/components/ui/Button';
 <Button title="Submit" onPress={handleSubmit} />
 <Button title="Cancel" variant="outline" size="sm" onPress={handleCancel} />
 <Button title="Loading..." loading onPress={() => {}} />
@@ -196,7 +222,7 @@ Variants: `primary` `secondary` `outline` `ghost` | Sizes: `sm` `md` `lg`
 ### Input
 
 ```tsx
-import { Input } from '@/components/common';
+import { Input } from '@/components/ui/Input';
 <Input label="Email" placeholder="you@example.com" keyboardType="email-address" />
 <Input label="Password" secureTextEntry error="Password is required" />
 <Input label="Bio" hint="Max 200 characters" multiline />
@@ -205,22 +231,76 @@ import { Input } from '@/components/common';
 ### Card
 
 ```tsx
-import { Card } from '@/components/common';
+import { Card } from '@/components/ui/Card';
 <Card>
-  <Text variant="h5">Title</Text>
-  <Text variant="body2">Content with themed shadow.</Text>
+  <Typography variant="h5">Title</Typography>
+  <Typography variant="body2">Content with themed shadow.</Typography>
 </Card>
 ```
 
-### SafeScreen
+### Badge
 
 ```tsx
-import { SafeScreen } from '@/components/common';
-<SafeScreen scroll>{/* content */}</SafeScreen>
-<SafeScreen edges={['top']} noPadding>{/* full-width */}</SafeScreen>
+import { Badge } from '@/components/ui/Badge';
+<Badge label="Active" variant="success" />
+<Badge label="Pending" variant="warning" />
+<Badge label="3 items" />
 ```
 
-### KeyboardSafeView
+Variants: `default` `success` `warning` `error` `info` `primary`
+
+### Avatar
+
+```tsx
+import { Avatar } from '@/components/ui/Avatar';
+<Avatar uri="https://example.com/photo.jpg" name="John Doe" />
+<Avatar name="Jane Smith" size={60} />
+```
+
+### ListItem
+
+```tsx
+import { ListItem } from '@/components/ui/ListItem';
+<ListItem title="Profile" icon="person-outline" onPress={goToProfile} showChevron />
+<ListItem title="Email" subtitle="john@example.com" icon="mail-outline" />
+<ListItem title="Dark Mode" icon="moon-outline" right={<Switch />} />
+```
+
+### EmptyState
+
+```tsx
+import { EmptyState } from '@/components/ui/EmptyState';
+<EmptyState title="No items" message="Add your first item to get started" />
+<EmptyState icon="search-outline" title="No results" actionLabel="Clear" onAction={clear} />
+```
+
+### Modal
+
+```tsx
+import { Modal } from '@/components/ui/Modal';
+<Modal visible={show} onClose={() => setShow(false)} title="Select Option">
+  <ListItem title="Option 1" onPress={() => {}} />
+  <ListItem title="Option 2" onPress={() => {}} />
+</Modal>
+```
+
+### Icon
+
+```tsx
+import { Icon } from '@/components/ui/Icon';
+<Icon name="home-outline" size={24} />
+<Icon name="heart" color={colors.error} />
+```
+
+### LoadingSpinner
+
+```tsx
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+<LoadingSpinner />
+<LoadingSpinner overlay size="large" />
+```
+
+### KeyboardSafeView (common/)
 
 ```tsx
 import { KeyboardSafeView } from '@/components/common';
@@ -239,16 +319,17 @@ import { KeyboardSafeView } from '@/components/common';
 Create `app/profile.tsx`:
 
 ```tsx
-import { SafeScreen, Text, Spacer } from '@/components/common';
+import { Screen, Typography } from '@/components/ui';
+import { Spacer } from '@/components/common';
 import { useTheme } from '@/hooks';
 
 export default function ProfileScreen() {
   const { colors } = useTheme();
   return (
-    <SafeScreen scroll>
+    <Screen scroll>
       <Spacer size="xl" />
-      <Text variant="h2">Profile</Text>
-    </SafeScreen>
+      <Typography variant="h2">Profile</Typography>
+    </Screen>
   );
 }
 ```
@@ -259,11 +340,13 @@ export default function ProfileScreen() {
 2. Add to `app/(tabs)/_layout.tsx`:
 
 ```tsx
+import { Icon } from '@/components/ui/Icon';
+
 <Tabs.Screen
   name="explore"
   options={{
     title: 'Explore',
-    tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
+    tabBarIcon: ({ color }) => <Icon name="search-outline" size={28} color={color} />,
   }}
 />
 ```
