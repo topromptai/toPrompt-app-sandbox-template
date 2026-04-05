@@ -20,7 +20,22 @@ export interface ThemeContextValue {
   setColorScheme: (scheme: 'light' | 'dark' | 'system') => void;
 }
 
-export const ThemeContext = createContext<ThemeContextValue | null>(null);
+// Default value ensures components don't crash if they render before
+// ThemeProvider mounts (e.g., during Expo Router transitions or Fast Refresh).
+const defaultTheme: ThemeContextValue = {
+  colors: Colors.light,
+  fonts: FontFamily,
+  fontWeight: FontWeight,
+  spacing: Spacing,
+  borderRadius: BorderRadius,
+  screenPadding: SCREEN_PADDING,
+  typography: Typography,
+  isDark: false,
+  colorScheme: 'light',
+  setColorScheme: () => {},
+};
+
+export const ThemeContext = createContext<ThemeContextValue>(defaultTheme);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
