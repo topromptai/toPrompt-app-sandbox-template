@@ -12,7 +12,6 @@ export { ErrorBoundary } from './ErrorBoundary';
 
 // ── Re-exports from ui/ (backward compatibility) ──
 export { Screen } from '@/components/ui/Screen';
-export { Screen as SafeScreen } from '@/components/ui/Screen';
 export { Typography } from '@/components/ui/Typography';
 export { Typography as Text } from '@/components/ui/Typography';
 export { Button } from '@/components/ui/Button';

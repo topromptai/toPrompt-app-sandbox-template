@@ -38,12 +38,12 @@ Developer edits:                    Consumed by:
 +----------------------------+      +-------------------------------------------+
 | constants/Colors.ts        | ---> | ThemeContext -> useTheme() -> all screens  |
 | constants/fonts.ts         | ---> | useAppFonts() -> root _layout.tsx          |
-| constants/spacing.ts       | ---> | Spacer, Button, Card, SafeScreen, Input   |
+| constants/spacing.ts       | ---> | Spacer, Button, Card, Screen, Input       |
 | constants/typography.ts    | ---> | <Text variant="h1"> auto-styled           |
 +----------------------------+      +-------------------------------------------+
 
 Root _layout.tsx provider chain:
-  ErrorBoundary -> QueryClientProvider -> ThemeProvider -> Stack
+  ErrorBoundary -> KeyboardProvider -> QueryClientProvider -> ThemeProvider -> Stack
 ```
 
 **How it flows:**
@@ -51,7 +51,7 @@ Root _layout.tsx provider chain:
 1. `Colors.ts` defines light/dark semantic color tokens
 2. `ThemeContext.tsx` reads colors + system preference + user override from Zustand
 3. `useTheme()` gives every component the resolved theme
-4. Components (`Text`, `Button`, `Input`, `Card`, `SafeScreen`) use theme colors automatically
+4. Components (`Typography`, `Button`, `Input`, `Card`, `Screen`) use theme colors automatically
 5. Change `primary` in `Colors.ts` → every button, link, accent updates instantly
 
 ---
@@ -146,34 +146,29 @@ expo-boilerplate/
 |   |-- index.ts                     # Re-exports tokens
 |
 |-- components/
-|   |-- common/                      # THEMED COMPONENTS (implementations)
-|   |   |-- Text.tsx                 # <Text variant="h1">
+|   |-- ui/                          # PRIMARY — all implementations live here
+|   |   |-- Screen.tsx               # SafeAreaView + StatusBar (edges defaults to ['top'])
+|   |   |-- Typography.tsx           # <Typography variant="h1"> themed text
 |   |   |-- Button.tsx               # <Button variant="primary"> with haptics
 |   |   |-- Input.tsx                # <Input label="Email" error="Required">
 |   |   |-- Card.tsx                 # <Card> with shadow
-|   |   |-- SafeScreen.tsx           # SafeArea + StatusBar wrapper
 |   |   |-- Badge.tsx                # <Badge label="Active" variant="success">
 |   |   |-- Avatar.tsx               # <Avatar uri={url} name="John">
 |   |   |-- ListItem.tsx             # <ListItem title="Profile" icon="person-outline">
 |   |   |-- EmptyState.tsx           # <EmptyState title="No items">
-|   |   |-- Modal.tsx                # <Modal visible title="Pick">
-|   |   |-- KeyboardSafeView.tsx     # Keyboard handling + tap to dismiss
-|   |   |-- Spacer.tsx               # <Spacer size="md">
-|   |   |-- LoadingSpinner.tsx       # Themed ActivityIndicator
-|   |   |-- ErrorBoundary.tsx        # Catches JS errors
-|   |   |-- index.ts                 # Barrel export
-|   |-- ui/                          # CODE GENERATOR IMPORT PATH (re-exports from common/)
-|   |   |-- Screen.tsx               # Re-exports SafeScreen as Screen
-|   |   |-- Typography.tsx           # Re-exports Text as Typography
+|   |   |-- Modal.tsx                # <Modal visible title="Pick"> bottom sheet
 |   |   |-- Icon.tsx                 # Ionicons-based icon component
-|   |   |-- Button/Card/Input/...    # Re-exports from common/
-|   |   |-- Badge/Avatar/ListItem/.. # Re-exports from common/
-|   |   |-- EmptyState/Modal/...     # Re-exports from common/
-|   |   |-- index.ts                 # Barrel export
+|   |   |-- LoadingSpinner.tsx       # Themed ActivityIndicator
 |   |   |-- IconSymbol.tsx           # SF Symbols (iOS) / Material Icons
 |   |   |-- HapticTab.tsx            # Tab button with haptic feedback
 |   |   |-- Collapsible.tsx          # Expand/collapse section
 |   |   |-- ExternalLink.tsx         # In-app browser link
+|   |   |-- index.ts                 # Barrel export
+|   |-- common/                      # LOCAL EXTRAS + re-exports from ui/
+|   |   |-- KeyboardSafeView.tsx     # Keyboard handling + tap to dismiss
+|   |   |-- Spacer.tsx               # <Spacer size="md">
+|   |   |-- ErrorBoundary.tsx        # Catches JS errors
+|   |   |-- index.ts                 # Re-exports Screen, Typography, Button, etc. from ui/
 |   |-- layout/                      # Container, Row, Divider
 |
 |-- hooks/                           # useTheme, useAppFonts, useColorScheme
@@ -187,14 +182,16 @@ expo-boilerplate/
 
 ## Pre-built Components
 
-> **Import path:** Use `@/components/ui` for generated code compatibility. Use `@/components/common` for direct implementations.
+> **Import path:** Use `@/components/ui` (primary — all implementations). `@/components/common` re-exports from ui/ for backward compatibility + has KeyboardSafeView, Spacer, ErrorBoundary.
 
 ### Screen (wraps SafeAreaView + StatusBar)
+
+Uses `SafeAreaView` from `react-native-safe-area-context` with `edges` control. Defaults to `edges={['top']}` — the tab bar handles bottom safe area, so no extra space above the tab bar.
 
 ```tsx
 import { Screen } from '@/components/ui/Screen';
 <Screen scroll>{/* content */}</Screen>
-<Screen edges={['top']} noPadding>{/* full-width */}</Screen>
+<Screen edges={['top', 'bottom']} noPadding>{/* full-screen outside tabs */}</Screen>
 ```
 
 ### Typography (themed text with variant presets)
@@ -302,11 +299,19 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 ### KeyboardSafeView (common/)
 
+Uses `react-native-keyboard-controller` — auto-scrolls to focused input with native-like animation + prev/next/done toolbar.
+
 ```tsx
 import { KeyboardSafeView } from '@/components/common';
-<KeyboardSafeView scroll>
+<KeyboardSafeView>
   <Input label="Name" />
+  <Input label="Email" />
   <Button title="Submit" onPress={submit} />
+</KeyboardSafeView>
+
+// Customize offset and hide toolbar:
+<KeyboardSafeView bottomOffset={40} showToolbar={false}>
+  <Input label="Search" />
 </KeyboardSafeView>
 ```
 
@@ -442,13 +447,14 @@ pnpm add lodash && pnpm add -D @types/lodash
 | `expo-secure-store` | Secure key storage | `services/api.ts` | `setAuthToken(token)` / `clearAuthToken()` |
 | `expo-font` | Custom font loading | `hooks/useAppFonts.ts` | Loaded automatically in root `_layout.tsx` |
 | `expo-splash-screen` | Splash screen | `app/_layout.tsx` | Auto-hides when fonts finish loading |
-| `expo-haptics` | Haptic feedback | `components/common/Button.tsx`, `components/ui/HapticTab.tsx` | `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)` |
+| `expo-haptics` | Haptic feedback | `components/ui/Button.tsx`, `components/ui/HapticTab.tsx` | `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)` |
 | `@react-native-async-storage` | Local storage | `utils/storage.ts` | `zustandStorage` adapter for Zustand persist |
-| `expo-status-bar` | Status bar control | `components/common/SafeScreen.tsx`, root layout | Auto light/dark via `<StatusBar style="auto">` |
+| `expo-status-bar` | Status bar control | `components/ui/Screen.tsx`, root layout | Auto light/dark via `<StatusBar style="auto">` |
 | `expo-constants` | App constants | Available | `Constants.expoConfig?.extra?.apiUrl` |
 | `expo-linking` | Deep linking | Expo Router integration | `Linking.openURL('https://...')` |
 | `expo-web-browser` | In-app browser | `components/ui/ExternalLink.tsx` | `openBrowserAsync(url)` |
-| `react-native-safe-area-context` | Safe areas | `components/common/SafeScreen.tsx` | `<SafeScreen edges={['top']}>` |
+| `react-native-safe-area-context` | Safe areas | `components/ui/Screen.tsx` | `<Screen edges={['top']}>` |
+| `react-native-keyboard-controller` | Keyboard handling | `components/common/KeyboardSafeView.tsx`, root layout | `<KeyboardSafeView>` — auto-scrolls to focused input + prev/next/done toolbar |
 | `react-native-screens` | Native screen containers | Expo Router dependency | Automatic — enables native stack performance |
 
 ### Available (installed, ready to import)

@@ -52,12 +52,13 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 
 ### DO NOT
 
-- Import `Text` from `react-native` — use `Text` from `@/components/common`
+- Import `Text` from `react-native` — use `Typography` from `@/components/ui`
 - Use raw hex colors like `'#0a7ea4'` — use `colors.primary` from `useTheme()`
 - Use hardcoded pixel numbers for spacing — use `Spacing.md` or `<Spacer size="md">`
 - Use `fontFamily: 'Inter-Regular'` — use `FontFamily.REGULAR` from `@/constants`
-- Create `KeyboardAvoidingView` manually — use `<KeyboardSafeView>`
-- Wrap screens in `SafeAreaView` manually — use `<SafeScreen>`
+- Create `KeyboardAvoidingView` manually — use `<KeyboardSafeView>` (uses `react-native-keyboard-controller` under the hood)
+- Wrap screens in `SafeAreaView` manually — use `<Screen>` from `@/components/ui`
+- Use `SafeAreaView` from `react-native` — use `Screen` which uses `SafeAreaView` from `react-native-safe-area-context` with `edges` control
 - Create a new Axios instance — use `api` from `@/services/api`
 - Create a new QueryClient — use `queryClient` from `@/services/queryClient`
 - Use relative imports like `../constants/Colors` or `../../hooks` — **always** use `@/constants/Colors` or `@/hooks` (the `@/` alias prevents case-sensitivity and path-depth bugs)
@@ -109,11 +110,13 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 
 ### Components
 
-**UI (`@/components/ui`) — primary import path for generated code:**
+**Architecture:** All implementations live in `ui/`. The `common/` folder has 3 local files (ErrorBoundary, KeyboardSafeView, Spacer) + barrel re-exports from `ui/` for backward compatibility.
+
+**`@/components/ui` — primary import path (all implementations):**
 
 | Component | Key Props |
 |-----------|-----------|
-| `Screen` | `scroll`, `edges`, `noPadding` — SafeAreaView + StatusBar wrapper |
+| `Screen` | `scroll`, `edges` (defaults `['top']` — tab bar handles bottom), `noPadding` — uses `SafeAreaView` from `react-native-safe-area-context` + StatusBar |
 | `Typography` | `variant` (h1-h6, body1-2, caption, etc.), `color`, `align` |
 | `Button` | `title`, `variant` (primary/secondary/outline/ghost), `size`, `loading`, `disabled`, `fullWidth` |
 | `Input` | `label`, `error`, `hint`, plus all TextInputProps |
@@ -125,18 +128,21 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 | `Modal` | `visible`, `onClose`, `title`, `children` — bottom sheet style |
 | `Icon` | `name` (Ionicons), `size`, `color` |
 | `LoadingSpinner` | `overlay`, `size` |
+| `IconSymbol` | SF Symbols (iOS) / Material Icons (Android/web), 19 pre-mapped icons |
+| `HapticTab` | Tab button with haptic feedback |
+| `Collapsible` | Expand/collapse section |
+| `ExternalLink` | In-app browser link |
 
-**Common (`@/components/common`) — implementations + extras:**
+**`@/components/common` — local extras + re-exports from ui/:**
 
-| Component | Key Props |
-|-----------|-----------|
-| `Text` | Same as Typography (aliased as Typography in ui/) |
-| `SafeScreen` | Same as Screen (aliased as Screen in ui/) |
-| `KeyboardSafeView` | `scroll`, `keyboardVerticalOffset` |
-| `Spacer` | `size` (SpacingKey), `horizontal` |
-| `ErrorBoundary` | `fallback` |
+| Component | Notes |
+|-----------|-------|
+| `KeyboardSafeView` | `bottomOffset`, `showToolbar` — uses `react-native-keyboard-controller` (auto-scrolls to focused input + prev/next/done toolbar) |
+| `Spacer` | `size` (SpacingKey), `horizontal` — local implementation |
+| `ErrorBoundary` | `fallback` — local implementation |
+| `Screen`, `Typography`, `Text`, `Button`, `Card`, `Input`, `Badge`, `Avatar`, `ListItem`, `EmptyState`, `Modal`, `LoadingSpinner` | Re-exported from `@/components/ui` for backward compatibility |
 
-**Layout (`@/components/layout`):**
+**`@/components/layout`:**
 
 | Component | Key Props |
 |-----------|-----------|
@@ -144,20 +150,11 @@ Context file for AI agents (Claude Code, Copilot, Cursor) working on projects bu
 | `Row` | `justify`, `align`, `gap`, `wrap` |
 | `Divider` | `spacing`, `vertical` |
 
-**UI extras (`@/components/ui/*`):**
-
-| Component | Description |
-|-----------|-------------|
-| `IconSymbol` | SF Symbols (iOS) / Material Icons (Android/web), 19 pre-mapped icons |
-| `HapticTab` | Tab button with haptic feedback |
-| `Collapsible` | Expand/collapse section |
-| `ExternalLink` | In-app browser link |
-
 ### Navigation
 
 ```
 app/
-  _layout.tsx           Root Stack (ErrorBoundary -> QueryClient -> Theme)
+  _layout.tsx           Root Stack (ErrorBoundary -> KeyboardProvider -> QueryClient -> Theme)
   +not-found.tsx        404
   modal.tsx             Modal example
   (tabs)/
@@ -339,10 +336,11 @@ import Svg, { Circle, Rect } from 'react-native-svg';
 | `expo-secure-store` | `services/api.ts` (auth token) |
 | `expo-font` | `hooks/useAppFonts.ts` |
 | `expo-splash-screen` | `app/_layout.tsx` |
-| `expo-haptics` | `components/common/Button.tsx`, `components/ui/HapticTab.tsx` |
+| `expo-haptics` | `components/ui/Button.tsx`, `components/ui/HapticTab.tsx` |
 | `@react-native-async-storage` | `utils/storage.ts` |
-| `expo-status-bar` | `components/common/SafeScreen.tsx`, root layout |
-| `react-native-safe-area-context` | `components/common/SafeScreen.tsx` |
+| `expo-status-bar` | `components/ui/Screen.tsx`, root layout |
+| `react-native-safe-area-context` | `components/ui/Screen.tsx` |
+| `react-native-keyboard-controller` | `components/common/KeyboardSafeView.tsx`, root layout (`KeyboardProvider`) |
 | `expo-web-browser` | `components/ui/ExternalLink.tsx` |
 
 ### Ready to import (no setup needed)

@@ -7,7 +7,7 @@ import { SCREEN_PADDING } from '@/constants/spacing';
 
 interface ScreenProps {
   children: React.ReactNode;
-  /** Which edges to apply safe area insets — defaults to ['top', 'bottom'] */
+  /** Which edges to apply safe area insets — defaults to ['top'] (tab bar handles bottom) */
   edges?: Edge[];
   /** Wrap content in a ScrollView */
   scroll?: boolean;

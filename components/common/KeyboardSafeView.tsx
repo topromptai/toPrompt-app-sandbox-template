@@ -1,66 +1,49 @@
+import { type ViewStyle } from 'react-native';
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  type ViewStyle,
-} from 'react-native';
+  KeyboardAwareScrollView,
+  KeyboardToolbar,
+} from 'react-native-keyboard-controller';
 
 interface KeyboardSafeViewProps {
   children: React.ReactNode;
   /** Additional container style */
   style?: ViewStyle;
-  /** Wrap children in a ScrollView that auto-scrolls to focused input */
-  scroll?: boolean;
-  /** Extra vertical offset for header bars */
-  keyboardVerticalOffset?: number;
+  /** Extra spacing between keyboard and focused input (default 20) */
+  bottomOffset?: number;
+  /** Show prev/next/done toolbar above keyboard (default true) */
+  showToolbar?: boolean;
 }
 
 /**
- * Keyboard-aware wrapper that adjusts content when the keyboard appears.
- * Tap outside inputs to dismiss the keyboard.
+ * Keyboard-aware wrapper using react-native-keyboard-controller.
+ * Automatically scrolls to focused TextInput and keeps it visible.
  *
- * - iOS: uses 'padding' behavior (most reliable)
- * - Android: uses 'height' behavior
+ * Requires <KeyboardProvider> in root _layout.tsx (already configured).
  *
  * Usage:
  *   <KeyboardSafeView>
- *     <TextInput placeholder="Name" />
- *     <TextInput placeholder="Email" />
- *   </KeyboardSafeView>
- *
- *   <KeyboardSafeView scroll keyboardVerticalOffset={80}>
- *     {/* Long form with many inputs *\/}
+ *     <Input label="Name" />
+ *     <Input label="Email" />
+ *     <Button title="Submit" onPress={submit} />
  *   </KeyboardSafeView>
  */
 export function KeyboardSafeView({
   children,
   style,
-  scroll = false,
-  keyboardVerticalOffset = 0,
+  bottomOffset = 20,
+  showToolbar = true,
 }: KeyboardSafeViewProps) {
-  const content = scroll ? (
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      {children}
-    </ScrollView>
-  ) : (
-    children
-  );
-
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[{ flex: 1 }, style]}
-      keyboardVerticalOffset={keyboardVerticalOffset}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        {content}
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    <>
+      <KeyboardAwareScrollView
+        bottomOffset={bottomOffset}
+        contentContainerStyle={[{ flexGrow: 1 }, style]}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        {children}
+      </KeyboardAwareScrollView>
+      {showToolbar && <KeyboardToolbar />}
+    </>
   );
 }
