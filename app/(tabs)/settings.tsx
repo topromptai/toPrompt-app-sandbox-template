@@ -1,10 +1,8 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { SafeScreen } from '@/components/common/SafeScreen';
-import { Spacer } from '@/components/common/Spacer';
-import { Text } from '@/components/common/Text';
-import { Divider } from '@/components/layout/Divider';
-import { Row } from '@/components/layout/Row';
+import { Screen, Typography } from '@/components/ui';
+import { Spacer } from '@/components/common';
+import { Divider, Row } from '@/components/layout';
 import { useTheme } from '@/hooks/useTheme';
 import { BorderRadius, Spacing } from '@/constants/spacing';
 import { useAppStore } from '@/store/useAppStore';
@@ -20,16 +18,16 @@ export default function SettingsScreen() {
   const { colorScheme, setColorScheme } = useAppStore();
 
   return (
-    <SafeScreen>
+    <Screen>
       <Spacer size="xl" />
-      <Text variant="h2">Settings</Text>
+      <Typography variant="h2">Settings</Typography>
       <Spacer size="xl" />
 
-      <Text variant="h5">Appearance</Text>
+      <Typography variant="h5">Appearance</Typography>
       <Spacer size="md" />
-      <Text variant="body2" color={colors.textSecondary}>
+      <Typography variant="body2" color={colors.textSecondary}>
         Choose your preferred color scheme. Changes are saved automatically.
-      </Text>
+      </Typography>
       <Spacer size="base" />
 
       <View style={styles.optionGroup}>
@@ -47,12 +45,12 @@ export default function SettingsScreen() {
                 },
               ]}
             >
-              <Text
+              <Typography
                 variant="button"
                 color={isSelected ? colors.textInverse : colors.text}
               >
                 {option.label}
-              </Text>
+              </Typography>
             </Pressable>
           );
         })}
@@ -62,22 +60,22 @@ export default function SettingsScreen() {
       <Divider />
       <Spacer size="lg" />
 
-      <Text variant="h5">About</Text>
+      <Typography variant="h5">About</Typography>
       <Spacer size="md" />
       <Row justify="space-between">
-        <Text variant="body2" color={colors.textSecondary}>
+        <Typography variant="body2" color={colors.textSecondary}>
           Version
-        </Text>
-        <Text variant="body2">1.0.0</Text>
+        </Typography>
+        <Typography variant="body2">1.0.0</Typography>
       </Row>
       <Spacer size="sm" />
       <Row justify="space-between">
-        <Text variant="body2" color={colors.textSecondary}>
+        <Typography variant="body2" color={colors.textSecondary}>
           SDK
-        </Text>
-        <Text variant="body2">Expo 54</Text>
+        </Typography>
+        <Typography variant="body2">Expo 54</Typography>
       </Row>
-    </SafeScreen>
+    </Screen>
   );
 }
 

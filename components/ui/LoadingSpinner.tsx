@@ -1,7 +1,51 @@
+import { ActivityIndicator, StyleSheet, View, type ViewStyle } from 'react-native';
+
+import { useTheme } from '@/hooks/useTheme';
+
+interface LoadingSpinnerProps {
+  /** Show a full-screen overlay behind the spinner */
+  overlay?: boolean;
+  /** Spinner size */
+  size?: 'small' | 'large';
+  /** Additional style */
+  style?: ViewStyle;
+}
+
 /**
- * LoadingSpinner — Re-export from common/ for @/components/ui/ import path compatibility.
+ * Themed loading indicator.
  *
  * Usage:
- *   import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+ *   <LoadingSpinner />
+ *   <LoadingSpinner overlay size="large" />
  */
-export { LoadingSpinner } from '@/components/common/LoadingSpinner';
+export function LoadingSpinner({ overlay = false, size = 'large', style }: LoadingSpinnerProps) {
+  const { colors } = useTheme();
+
+  if (overlay) {
+    return (
+      <View style={[styles.overlay, { backgroundColor: colors.overlay }, style]}>
+        <ActivityIndicator size={size} color={colors.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.center, style]}>
+      <ActivityIndicator size={size} color={colors.primary} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 999,
+  },
+});

@@ -1,21 +1,26 @@
 /**
- * Barrel export for all common components.
+ * Barrel export for common components.
  *
- * Usage:
- *   import { Text, Button, SafeScreen, Input, Card, Badge, Avatar } from '@/components/common';
+ * Local implementations: KeyboardSafeView, Spacer, ErrorBoundary
+ * Everything else lives in @/components/ui/ — re-exported here for backward compatibility.
  */
 
-export { Text } from './Text';
-export { Button } from './Button';
-export { SafeScreen } from './SafeScreen';
+// ── Local implementations ──
 export { KeyboardSafeView } from './KeyboardSafeView';
-export { Input } from './Input';
-export { Card } from './Card';
 export { Spacer } from './Spacer';
-export { LoadingSpinner } from './LoadingSpinner';
 export { ErrorBoundary } from './ErrorBoundary';
-export { Badge } from './Badge';
-export { Avatar } from './Avatar';
-export { ListItem } from './ListItem';
-export { EmptyState } from './EmptyState';
-export { Modal } from './Modal';
+
+// ── Re-exports from ui/ (backward compatibility) ──
+export { Screen } from '@/components/ui/Screen';
+export { Screen as SafeScreen } from '@/components/ui/Screen';
+export { Typography } from '@/components/ui/Typography';
+export { Typography as Text } from '@/components/ui/Typography';
+export { Button } from '@/components/ui/Button';
+export { Card } from '@/components/ui/Card';
+export { Input } from '@/components/ui/Input';
+export { Badge } from '@/components/ui/Badge';
+export { Avatar } from '@/components/ui/Avatar';
+export { ListItem } from '@/components/ui/ListItem';
+export { EmptyState } from '@/components/ui/EmptyState';
+export { Modal } from '@/components/ui/Modal';
+export { LoadingSpinner } from '@/components/ui/LoadingSpinner';

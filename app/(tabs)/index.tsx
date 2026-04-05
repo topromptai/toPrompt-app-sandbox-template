@@ -1,13 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Button } from '@/components/common/Button';
-import { Card } from '@/components/common/Card';
-import { Input } from '@/components/common/Input';
-import { SafeScreen } from '@/components/common/SafeScreen';
-import { Spacer } from '@/components/common/Spacer';
-import { Text } from '@/components/common/Text';
-import { Divider } from '@/components/layout/Divider';
-import { Row } from '@/components/layout/Row';
+import { Button, Card, Input, Screen, Typography } from '@/components/ui';
+import { Spacer } from '@/components/common';
+import { Divider, Row } from '@/components/layout';
 import { useTheme } from '@/hooks/useTheme';
 import { Spacing } from '@/constants/spacing';
 
@@ -15,42 +10,42 @@ export default function HomeScreen() {
   const { colors } = useTheme();
 
   return (
-    <SafeScreen scroll>
+    <Screen scroll>
       <Spacer size="xl" />
 
-      <Text variant="h1">Expo Boilerplate</Text>
+      <Typography variant="h1">Expo Boilerplate</Typography>
       <Spacer size="sm" />
-      <Text variant="body1" color={colors.textSecondary}>
+      <Typography variant="body1" color={colors.textSecondary}>
         A production-ready starter template with centralized theming, pre-configured packages, and
         reusable components.
-      </Text>
+      </Typography>
 
       <Spacer size="xl" />
       <Divider />
       <Spacer size="lg" />
 
       {/* Typography Demo */}
-      <Text variant="h4">Typography Presets</Text>
+      <Typography variant="h4">Typography Presets</Typography>
       <Spacer size="md" />
-      <Text variant="h1">Heading 1</Text>
-      <Text variant="h2">Heading 2</Text>
-      <Text variant="h3">Heading 3</Text>
-      <Text variant="h4">Heading 4</Text>
-      <Text variant="h5">Heading 5</Text>
-      <Text variant="h6">Heading 6</Text>
+      <Typography variant="h1">Heading 1</Typography>
+      <Typography variant="h2">Heading 2</Typography>
+      <Typography variant="h3">Heading 3</Typography>
+      <Typography variant="h4">Heading 4</Typography>
+      <Typography variant="h5">Heading 5</Typography>
+      <Typography variant="h6">Heading 6</Typography>
       <Spacer size="sm" />
-      <Text variant="body1">Body 1 — primary body text</Text>
-      <Text variant="body2">Body 2 — secondary body text</Text>
-      <Text variant="caption" color={colors.textMuted}>
+      <Typography variant="body1">Body 1 — primary body text</Typography>
+      <Typography variant="body2">Body 2 — secondary body text</Typography>
+      <Typography variant="caption" color={colors.textMuted}>
         Caption — small helper text
-      </Text>
+      </Typography>
 
       <Spacer size="xl" />
       <Divider />
       <Spacer size="lg" />
 
       {/* Button Demo */}
-      <Text variant="h4">Button Variants</Text>
+      <Typography variant="h4">Button Variants</Typography>
       <Spacer size="md" />
       <View style={styles.buttonGroup}>
         <Button title="Primary" onPress={() => {}} />
@@ -67,7 +62,7 @@ export default function HomeScreen() {
       <Spacer size="lg" />
 
       {/* Button Sizes */}
-      <Text variant="h4">Button Sizes</Text>
+      <Typography variant="h4">Button Sizes</Typography>
       <Spacer size="md" />
       <Row gap="sm">
         <Button title="Small" size="sm" onPress={() => {}} />
@@ -80,7 +75,7 @@ export default function HomeScreen() {
       <Spacer size="lg" />
 
       {/* Input Demo */}
-      <Text variant="h4">Input Fields</Text>
+      <Typography variant="h4">Input Fields</Typography>
       <Spacer size="md" />
       <Input label="Email" placeholder="you@example.com" keyboardType="email-address" />
       <Spacer size="md" />
@@ -93,19 +88,19 @@ export default function HomeScreen() {
       <Spacer size="lg" />
 
       {/* Card Demo */}
-      <Text variant="h4">Card Component</Text>
+      <Typography variant="h4">Card Component</Typography>
       <Spacer size="md" />
       <Card>
-        <Text variant="h5">Card Title</Text>
+        <Typography variant="h5">Card Title</Typography>
         <Spacer size="xs" />
-        <Text variant="body2" color={colors.textSecondary}>
+        <Typography variant="body2" color={colors.textSecondary}>
           A themed container with background, border, and platform shadow. Edit colors.ts to change
           the card appearance.
-        </Text>
+        </Typography>
       </Card>
 
       <Spacer size="3xl" />
-    </SafeScreen>
+    </Screen>
   );
 }
 
