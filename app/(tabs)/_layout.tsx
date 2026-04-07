@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 
 import { HapticTab } from '@/components/ui/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Icon } from '@/components/ui/Icon';
 import { useTheme } from '@/hooks/useTheme';
 
 export default function TabLayout() {
@@ -28,14 +28,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="home-outline" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="settings-outline" size={28} color={color} />,
         }}
       />
     </Tabs>

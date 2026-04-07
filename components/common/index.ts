@@ -6,7 +6,8 @@
  */
 
 // ── Local implementations ──
-export { KeyboardSafeView } from './KeyboardSafeView';
+// KeyboardSafeView removed — react-native-keyboard-controller is NOT Expo Go compatible
+// Use KeyboardAvoidingView from 'react-native' instead
 export { Spacer } from './Spacer';
 export { ErrorBoundary } from './ErrorBoundary';
 

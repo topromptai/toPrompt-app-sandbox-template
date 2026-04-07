@@ -21,12 +21,13 @@ export { ListItem } from './ListItem';
 export { EmptyState } from './EmptyState';
 export { Modal } from './Modal';
 export { Icon } from './Icon';
+export { AppHeader } from './AppHeader';
 export { LoadingSpinner } from './LoadingSpinner';
 
 // ── Existing UI utilities ──
 export { HapticTab } from './HapticTab';
 export { Collapsible } from './Collapsible';
 export { ExternalLink } from './ExternalLink';
-export { IconSymbol } from './IconSymbol';
+// IconSymbol removed — expo-symbols is NOT Expo Go compatible. Use Icon (Ionicons) instead.
 export { ThemedText } from './ThemedText';
 export { ThemedView } from './ThemedView';
